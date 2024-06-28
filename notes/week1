@@ -32,8 +32,10 @@
 
 
 ### HDL (Hardware Description Language)
-Purpose: Simplifies the implementation of gates and chips by describing their behavior and structure in a high-level language.
-Example: Implementation of an XOR gate using HDL based on NOT, AND, and OR gates.
+Purpose: Simplifies the implementation of gates and chips by describing
+their behavior and structure in a high-level language.
+it is almost like java syntax for enums or for some calsses
+Example: Implementation of an XOR gate using HDL based on NOT, AND, and OR gates. also an automatic testing langugae will test all the possible results to the normal result to see the behavoir of our chip
 XOR Gate HDL Example
 hdl
 
