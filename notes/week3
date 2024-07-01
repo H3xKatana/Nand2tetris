@@ -1,0 +1,169 @@
+
+### Sequential Logic
+Sequential logic circuits are types of logic circuits whose output depends not only on the current inputs but also on the history of inputs. This is because they incorporate memory elements. The fundamental building blocks of sequential logic are flip-flops and latches.
+
+### D Flip-Flop (Data or Delay Flip-Flop)
+A D flip-flop is a memory element that captures the value of the D-input at a specific portion of the clock cycle (typically the rising or falling edge of the clock signal) and holds that value until the next clock edge. It has two inputs, D (data) and a clock signal, and two outputs, Q and its complement Q'.
+
+#### Diagram:
+```
+       _______
+D ----|       |
+     | D-FF  |---- Q
+CLK --|       |
+     |_______|---- Q'
+```
+
+#### Behavior:
+- **On the rising edge of the clock**: Q takes the value of D.
+- **Otherwise**: Q retains its previous value.
+
+#### Truth Table:
+| Clock | D | Q(next) |
+|-------|---|---------|
+| ↑     | 0 | 0       |
+| ↑     | 1 | 1       |
+| 0/1   | X | Q       |
+
+### Bit / Memory Cell
+A memory cell or bit in digital logic is typically built using a D flip-flop. It stores a single bit of data (0 or 1).
+
+#### Diagram:
+```
+       _______
+in ----|       |
+     | D-FF  |---- out
+load -|       |
+     |_______|
+```
+
+#### Behavior:
+- **Load enabled**: The bit stores the input value.
+- **Load disabled**: The bit retains its previous value.
+
+### Register
+A register is a collection of D flip-flops, each storing one bit, that can store a multi-bit value. Registers are used to store data temporarily and are key components in CPUs and other digital systems.
+
+#### Diagram (4-bit Register example):
+```
+       _______________
+in[0]--|  D-FF       |
+in[1]--|  D-FF       |---- out[0..3]
+in[2]--|  D-FF       |
+in[3]--|  D-FF       |
+       |_____________|
+          ^     ^
+         clk   load
+```
+
+#### Behavior:
+- **Load enabled**: The register stores the input values on the next clock edge.
+- **Load disabled**: The register retains its current values.
+
+### RAM (Random Access Memory)
+RAM is a type of volatile memory that stores data that can be read and written to in any order. It is composed of multiple memory cells organized in an array, allowing for quick access to data at any address.
+
+#### Diagram:
+```
+          _____________
+address --|  Decoder   |
+           ___________
+in -------|  Mem Cell  |-- out
+          |  Array     |
+load -----|____________|
+```
+
+#### Behavior:
+- **Write operation**: Data at the input is stored in the memory cell selected by the address when the load signal is high.
+- **Read operation**: Data from the memory cell selected by the address is output.
+
+### Counters
+Counters are sequential circuits that go through a predetermined sequence of states. The most basic type is a binary counter, which increments its value by 1 on each clock cycle.
+
+#### Diagram (4-bit Counter example):
+```
+        ______________
+       |              |
+clk -->|   Counter    |--> out[0..3]
+       |______________|
+```
+
+#### Behavior:
+- **On each clock pulse**: The counter's output value increases by one.
+- **Overflow**: If the counter reaches its maximum value, it wraps around to zero.
+
+#### Truth Table (for a 2-bit Counter):
+| clk | Q1 | Q0 |
+|-----|----|----|
+|  0  | 0  | 0  |
+|  1  | 0  | 1  |
+|  2  | 1  | 0  |
+|  3  | 1  | 1  |
+|  4  | 0  | 0  |
+
+### Explanation in Context of HDL
+
+#### D Flip-Flop Implementation
+```hdl
+CHIP DFF {
+    IN d, clk;
+    OUT q;
+
+    PARTS:
+    // The implementation of a D Flip-Flop is usually hidden in lower-level hardware or HDL libraries.
+}
+```
+
+#### Bit / Memory Cell Implementation
+```hdl
+CHIP Bit {
+    IN in, load, clk;
+    OUT out;
+
+    PARTS:
+    Mux(a=out, b=in, sel=load, out=d);
+    DFF(d=d, clk=clk, q=out);
+}
+```
+
+#### Register Implementation
+```hdl
+CHIP Register {
+    IN in[16], load, clk;
+    OUT out[16];
+
+    PARTS:
+    // Instantiate 16 Bits to form a 16-bit Register
+    Bit(in=in[0], load=load, clk=clk, out=out[0]);
+    Bit(in=in[1], load=load, clk=clk, out=out[1]);
+    // ...
+    Bit(in=in[15], load=load, clk=clk, out=out[15]);
+}
+```
+
+#### RAM Implementation
+```hdl
+CHIP RAM4K {
+    IN in[16], load, address[12];
+    OUT out[16];
+
+    PARTS:
+    // Implementation of 4K RAM using smaller memory units
+    // and a decoder to select the appropriate memory unit
+}
+```
+
+#### Counter Implementation
+```hdl
+CHIP Counter {
+    IN clk, reset, enable;
+    OUT out[16];
+
+    PARTS:
+    // Counter logic using Inc16 and a Register
+    Inc16(in=out, out=incOut);
+    Mux(a=out, b=incOut, sel=enable, out=loadIn);
+    Mux(a=loadIn, b=false, sel=reset, out=resetIn);
+    Register(in=resetIn, load=true, clk=clk, out=out);
+}
+```
