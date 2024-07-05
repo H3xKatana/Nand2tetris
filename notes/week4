@@ -1,0 +1,112 @@
+
+
+## Machine Language Overview
+### Universal Turing Machine and Von Neumann Architecture
+
+### Machine Memory Elements
+- **Memory Hierarchy**: Registers, Cache, RAM, Disk
+- **I/O Devices and Drivers Interface**
+- **Instructions**
+- **Flow Control**
+
+## The Hack Computer and its Machine Language
+- **Hardware and Machine Language Relationship**
+    - 16-bit machine
+    - RAM: Array of 16-bit cells
+    - Instruction Memory (ROM): Array of 16-bit cells
+    - CPU
+    - Instruction Bus / Data Bus / Address Bus
+
+### Instructions
+- **A-instruction**
+- **C-instruction**
+
+### Control
+- ROM is loaded with Hack program
+- Reset
+- Program start
+
+### Registers
+- **D**
+- **A**
+- **M**
+
+## Machine Language Syntax
+- **A-instruction**: `@value` where value is a constant non-negative number or a variable.
+
+## The Hack Machine Language
+The Hack machine language is a simple assembly language designed for the Hack computer, part of the educational project Nand2Tetris. This course teaches students how to build a computer from basic logic gates to writing high-level programs.
+
+### Instruction Types
+1. **A-instruction**: Sets the value of the A register or specifies a memory address. Format: `@value` where `value` can be a number or a symbol.
+    - **Example**: `@100` (sets the A register to 100)
+
+2. **C-instruction**: Performs computations and stores results. Format: `dest=comp;jump`, where `dest` specifies the destination, `comp` specifies the computation, and `jump` specifies the jump condition.
+    - **Example**: `D=M+1;JGT` (if the computation result `M+1` is greater than zero, jump to the specified address)
+
+### Examples of Hack Assembly Language Instructions
+#### Example 1: Simple A-instruction
+```asm
+@10
+D=A
+```
+- `@10`: Set the A register to 10.
+- `D=A`: Copy the value in the A register (which is now 10) into the D register.
+
+#### Example 2: Basic Computation and Storage
+```asm
+@5
+D=A        // D = 5
+@3
+D=D+A      // D = 5 + 3 = 8
+@15
+M=D        // RAM[15] = 8
+```
+- `@5`: Set the A register to 5.
+- `D=A`: Copy the value 5 into the D register.
+- `@3`: Set the A register to 3.
+- `D=D+A`: Add the value in A (3) to D (5), resulting in D = 8.
+- `@15`: Set the A register to 15.
+- `M=D`: Store the value in D (8) into memory address 15 (RAM[15]).
+
+#### Example 3: Conditional Jump
+```asm
+@variable
+D=M        // D = RAM[variable]
+@10
+D=D-A      // D = RAM[variable] - 10
+@OUTPUT
+D;JGT      // If D > 0, jump to OUTPUT
+```
+- `@variable`: Set the A register to the address labeled `variable`.
+- `D=M`: Copy the value stored in RAM at `variable` into the D register.
+- `@10`: Set the A register to 10.
+- `D=D-A`: Subtract the value in A (10) from D.
+- `@OUTPUT`: Set the A register to the address labeled `OUTPUT`.
+- `D;JGT`: If D is greater than 0, jump to the instruction at the `OUTPUT` label.
+
+#### Example 4: Infinite Loop
+```asm
+(LOOP)
+@LOOP
+0;JMP      // Infinite loop
+```
+- `(LOOP)`: Define a label named `LOOP`.
+- `@LOOP`: Set the A register to the address of the label `LOOP`.
+- `0;JMP`: Jump unconditionally to the `LOOP` label, creating an infinite loop.
+
+#### Example 5: Loading a Value into Memory
+```asm
+@256
+D=A        // D = 256
+@SP
+M=D        // RAM[SP] = 256
+```
+- `@256`: Set the A register to 256.
+- `D=A`: Copy the value 256 into the D register.
+- `@SP`: Set the A register to the address labeled `SP`.
+- `M=D`: Store the value in D (256) into the memory location labeled `SP`.
+
+These examples cover basic operations in the Hack assembly language, including loading values, performing arithmetic, conditional jumps, and creating loops.
+
+---
